@@ -2,9 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ main, develop, ci/add-github-actions-tests ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop, ci/add-github-actions-tests ]
+    branches: [ main ]
 
 jobs:
   tests:
