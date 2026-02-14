@@ -118,6 +118,13 @@ RuntimeException
 * Rotate keys periodically if used in production.
 * Do not modify encrypted payloads manually.
 
+## Running Tests
+
+```bash
+composer install
+composer test
+```
+
 ## License
 
 MIT
