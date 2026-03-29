@@ -2,11 +2,11 @@
 
 namespace KishorRajbanshi\Crypt;
 
-use RuntimeException;
 use KishorRajbanshi\Crypt\Exceptions\Decrypt as DecryptException;
 use KishorRajbanshi\Crypt\Exceptions\Encrypt as EncryptException;
 use KishorRajbanshi\Crypt\Interfaces\Crypter as CrypterInterface;
 use KishorRajbanshi\Crypt\Interfaces\StringCrypter as StringCrypterInterface;
+use RuntimeException;
 
 class Crypter implements CrypterInterface, StringCrypterInterface
 {
@@ -27,11 +27,12 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Create a new encrypter instance.
      *
-     * @param  string  $key
-     * @param  string  $cipher
-     * @return void
+     * @param string $key
+     * @param string $cipher
      *
      * @throws \RuntimeException
+     *
+     * @return void
      */
     public function __construct($key, $cipher = 'AES-128-CBC')
     {
@@ -48,8 +49,9 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Determine if the given key and cipher combination is valid.
      *
-     * @param  string  $key
-     * @param  string  $cipher
+     * @param string $key
+     * @param string $cipher
+     *
      * @return bool
      */
     public static function supported($key, $cipher)
@@ -63,12 +65,13 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Create a new encryption key for the given cipher.
      *
-     * @param  string  $cipher
+     * @param string $cipher
+     *
      * @return string
      */
     public static function generateKey($cipher)
     {
-        if (! in_array($cipher, ['AES-128-CBC', 'AES-256-CBC'])) {
+        if (!in_array($cipher, ['AES-128-CBC', 'AES-256-CBC'])) {
             throw new RuntimeException('The only supported ciphers are AES-128-CBC and AES-256-CBC.');
         }
 
@@ -78,11 +81,12 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Encrypt the given value.
      *
-     * @param  mixed  $value
-     * @param  bool  $serialize
-     * @return string
+     * @param mixed $value
+     * @param bool  $serialize
      *
      * @throws \KishorRajbanshi\Crypt\Exceptions\Encrypt
+     *
+     * @return string
      */
     public function encrypt($value, $serialize = true)
     {
@@ -120,10 +124,11 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Encrypt a string without serialization.
      *
-     * @param  string  $value
-     * @return string
+     * @param string $value
      *
      * @throws \KishorRajbanshi\Crypt\Exceptions\Encrypt
+     *
+     * @return string
      */
     public function encryptString($value)
     {
@@ -133,11 +138,12 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Decrypt the given value.
      *
-     * @param  string  $payload
-     * @param  bool  $unserialize
-     * @return mixed
+     * @param string $payload
+     * @param bool   $unserialize
      *
      * @throws \KishorRajbanshi\Crypt\Exceptions\Decrypt
+     *
+     * @return mixed
      */
     public function decrypt($payload, $unserialize = true)
     {
@@ -166,10 +172,11 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Decrypt the given string without unserialization.
      *
-     * @param  string  $payload
-     * @return string
+     * @param string $payload
      *
      * @throws \KishorRajbanshi\Crypt\Exceptions\Decrypt
+     *
+     * @return string
      */
     public function decryptString($payload)
     {
@@ -179,22 +186,24 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Create a MAC for the given value.
      *
-     * @param  string  $iv
-     * @param  mixed  $value
+     * @param string $iv
+     * @param mixed  $value
+     *
      * @return string
      */
     protected function hash($iv, $value)
     {
-        return hash_hmac('sha256', $iv . $value, $this->key);
+        return hash_hmac('sha256', $iv.$value, $this->key);
     }
 
     /**
      * Get the JSON array from the given payload.
      *
-     * @param  string  $payload
-     * @return array
+     * @param string $payload
      *
      * @throws \KishorRajbanshi\Crypt\Exceptions\Decrypt
+     *
+     * @return array
      */
     protected function getJsonPayload($payload)
     {
@@ -203,11 +212,11 @@ class Crypter implements CrypterInterface, StringCrypterInterface
         // If the payload is not valid JSON or does not have the proper keys set we will
         // assume it is invalid and bail out of the routine since we will not be able
         // to decrypt the given value. We'll also check the MAC for this encryption.
-        if (! $this->validPayload($payload)) {
+        if (!$this->validPayload($payload)) {
             throw new DecryptException('The payload is invalid.');
         }
 
-        if (! $this->validMac($payload)) {
+        if (!$this->validMac($payload)) {
             throw new DecryptException('The MAC is invalid.');
         }
 
@@ -217,7 +226,8 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Verify that the encryption payload is valid.
      *
-     * @param  mixed  $payload
+     * @param mixed $payload
+     *
      * @return bool
      */
     protected function validPayload($payload)
@@ -229,7 +239,8 @@ class Crypter implements CrypterInterface, StringCrypterInterface
     /**
      * Determine if the MAC for the given payload is valid.
      *
-     * @param  array  $payload
+     * @param array $payload
+     *
      * @return bool
      */
     protected function validMac(array $payload)

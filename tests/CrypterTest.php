@@ -2,7 +2,6 @@
 
 use KishorRajbanshi\Crypt\Crypter;
 use KishorRajbanshi\Crypt\Exceptions\Decrypt;
-use KishorRajbanshi\Crypt\Exceptions\Encrypt;
 
 it('encrypts and decrypts string correctly', function () {
     $key = random_bytes(32);
@@ -37,7 +36,7 @@ it('fails when payload is tampered', function () {
     $encrypted = $crypter->encryptString('secure');
 
     // tamper payload
-    $tampered = substr($encrypted, 0, -2) . 'xx';
+    $tampered = substr($encrypted, 0, -2).'xx';
 
     $crypter->decryptString($tampered);
 })->throws(Decrypt::class);
